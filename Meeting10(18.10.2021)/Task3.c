@@ -34,7 +34,6 @@ double atof(char *pStr)
         {
             isNeg = 1;
         }
-
         else if (*pStr == '.')
         {
             for(; *pStr != '\0'; pStr++)
@@ -45,10 +44,7 @@ double atof(char *pStr)
                     power *= 10;
                 }
             }
-
-            break; 
         }
-
         else if ( ( (*pStr - '0') >= 0 ) && ( (*pStr - '0') <= 9 ) )
         {
             beforePoint = (10 * beforePoint) + (*pStr - '0');
@@ -64,7 +60,6 @@ double atof(char *pStr)
     {
         return (-num);
     }
-
     else 
     {
         return num;

@@ -46,7 +46,6 @@ double atof(char *pStr)
                 power *= 10;
             }
         }
-
         else
         {
             beforePoint = (10 * beforePoint) + (*pStr - '0');
