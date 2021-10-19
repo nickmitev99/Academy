@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 void itob(int iNum, char *sStr, int iBase);
-void reverse(char sStr[]);
+void reverse(char* sStr);
 int menu();
 
 int main()
@@ -30,7 +30,7 @@ int main()
 int menu()
 {
     char sStr[100] = { 0 };
-    int iChoice = 0, iNum = 0, iBase = 0;
+    int iChoice = 0, iNum = 0;
 
     system("cls");
     printf("--Number Converter--\n");
@@ -53,9 +53,7 @@ int menu()
     {
         case 1:
             {
-                iBase = 10;
-                itob(iNum, sStr, iBase);
-                reverse(sStr);
+                itob(iNum, sStr, 10);
                 printf("%d in decimal is: %s\n", iNum, sStr);
                 system("pause");
             }
@@ -63,9 +61,7 @@ int menu()
 
         case 2:
             {
-                iBase = 16;
-                itob(iNum, sStr, iBase);
-                reverse(sStr);
+                itob(iNum, sStr, 16);
                 printf("%d in hexadecimal is: %s\n", iNum, sStr);
                 system("pause");
             }
@@ -73,9 +69,7 @@ int menu()
 
         case 3:
             {
-                iBase = 8;
-                itob(iNum, sStr, iBase);
-                reverse(sStr);
+                itob(iNum, sStr, 8);
                 printf("%d in octal is: %s\n", iNum, sStr);
                 system("pause");
             }
@@ -83,9 +77,7 @@ int menu()
 
         case 4:
             {
-                iBase = 2;
-                itob(iNum, sStr, iBase);
-                reverse(sStr);
+                itob(iNum, sStr, 2);
                 printf("%d in binary is: %s\n", iNum, sStr);
                 system("pause");
             }
@@ -106,6 +98,8 @@ int menu()
 
 void itob(int iNum, char *sStr, int iBase)
 {
+    char *temp = sStr;
+
     do
     {
         if( iBase == 10 )
@@ -113,42 +107,37 @@ void itob(int iNum, char *sStr, int iBase)
             *sStr += ( (iNum % 10) + '0');
             iNum /= 10;
         }
-
-        if ( iBase == 16)
+        else if ( iBase == 16)
         {
             *sStr += (iNum % 16);
-
             if( (*sStr >= 10) && (*sStr <= 15) )
             {
                 *sStr += 55;
             }
-
             else 
             {
                 *sStr += '0';
             }
-
             iNum /= 16;
         }
-        
-        if ( iBase == 8)
+        else if ( iBase == 8)
         {
             *sStr += ( (iNum % 8) + '0');
             iNum /= 8;
         }
-
-        if ( iBase == 2)
+        else if ( iBase == 2)
         {
             *sStr += ( (iNum % 2) + '0');
             iNum /= 2;
         }
 
-
         sStr++;
     } while (iNum != 0);
+
+    reverse(temp);
 }
 
-void reverse(char sStr[])
+void reverse(char* sStr)
 {
     char temp;
 
