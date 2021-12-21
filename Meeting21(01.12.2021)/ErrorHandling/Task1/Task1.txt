@@ -1,0 +1,5 @@
+  FILE *fpRead = fopen("Task1.txt", "r";
+  int iRBracketsCount = 0, iSBracketsCount = 0, iCBracketsCount = 0;
+  int iLineCount = 0, iLineError = 0;
+  char strBuffer[ = { STRING_SIZE ;
+  if(fpRead == NULL)

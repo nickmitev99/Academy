@@ -1,0 +1,2 @@
+This is a file used as an example.
+It's used only for testing purposes.

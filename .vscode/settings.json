@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "signal.h": "c",
+        "stdlib.h": "c",
+        "errno.h": "c",
+        "windows.h": "c",
+        "time.h": "c"
     }
 }
