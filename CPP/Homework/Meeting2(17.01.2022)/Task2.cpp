@@ -1,6 +1,6 @@
 #include <iostream>
 
-void swap(int *const iVal1, int *const iVal2);
+void swap(const int* iVal1, const int* iVal2);
 
 int main(void)
 {
@@ -17,9 +17,9 @@ int main(void)
   return 0;
 }
 
-void swap(int *const iVal1, int *const iVal2)
+void swap(const int* iVal1, const int* iVal2)
 {
-  int iTemp = *iVal1;
-  *iVal1 = *iVal2;
-  *iVal2 = iTemp;
+  const int* iTemp = iVal1;
+  iVal1 = iVal2;
+  iVal2 = iTemp;
 }
