@@ -1,0 +1,13 @@
+COMP = gcc #Used compiler
+FLAGS = -o #Used flags
+SRC = Src/Menu.c Src/Dealership.c Src/Validation.c Src/VehicleFunctions.c Src/FileFunctions.c #Program sources
+EXE_NAME = CarDealership.exe #Generated .exe file
+
+all:
+	$(COMP) $(SRC) $(FLAGS) $(EXE_NAME)
+
+exec:
+	./$(EXE_NAME)
+
+clean:
+	del -fr $(EXE_NAME)

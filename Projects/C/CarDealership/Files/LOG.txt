@@ -1,0 +1,8 @@
+Run from Wed Jan 19 15:28:34 2022
+
+
+FUNCTION: readFile
+Succesfully executed!
+
+FUNCTION: writeFile
+Succesfully executed!
