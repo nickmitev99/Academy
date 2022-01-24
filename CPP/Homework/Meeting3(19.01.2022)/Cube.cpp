@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Cube.h"
 
-Cube::Cube(int zZ) : z(zZ)
+Cube::Cube(int zZ) : Square(), z(zZ)
 {
   std::cout << "\nCube constructor" << std::endl;
 }

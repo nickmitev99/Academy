@@ -11,7 +11,7 @@ class Point
   Point(const Point &pRef);
   ~Point();
 
-  int getPt() { return pt; }
+  inline int getPt() { return pt; }
 };
 
 
