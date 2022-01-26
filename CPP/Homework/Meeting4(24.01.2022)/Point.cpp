@@ -3,6 +3,11 @@
 
 int Point::ptCounter = 0;
 
+int Point::getPtCount() 
+{ 
+  return ptCounter;
+}
+
 Point::Point(int p)
 {
   ptCounter++;
@@ -37,14 +42,14 @@ Point::Point(Point &&rRef) noexcept : pt(rRef.pt)
   std::cout << "\nPoint move constructor" << std::endl;
 }
 
-const int Point::getThis()
+int Point::getThis() const
 {
   std::cout << "this: " << this << std::endl;
 
   return 0;
 }
 
-void displayPoint(Point &p)
+void Point::displayPoint()
 {
-  std::cout << __func__  << ":\nCount = " << p.getPtCount() << "\tpt = " << p.getPt() << std::endl;
+  std::cout << __func__  << ":\nCount = " << getPtCount() << "\tpt = " << getPt() << std::endl;
 }

@@ -3,6 +3,11 @@
 
 int Cube::cbCounter = 0;
 
+int Cube::getCbCount()
+{ 
+  return cbCounter;
+}
+
 Cube::Cube(int p, int xX, int yY, int zZ) : Square(p, xX, yY)
 {
   cbCounter++;
@@ -48,8 +53,8 @@ Cube::Cube(Cube &&rRef) noexcept : z(rRef.z)
   std::cout << "Cube move constructor" << std::endl;
 }
 
-void displayCube(Cube &c)
+void Cube::displayCube()
 {
-  std::cout << __func__  << ":\nCount = " << c.getCbCount() << "\tpt = " << c.getPt() << "\tx = " << c.getX()
-   << "\ty = " << c.getY() << "\tz = " << c.getZ() << std::endl;
+  std::cout << __func__  << ":\nCount = " << getCbCount() << "\tpt = " << getPt() << "\tx = " << getX()
+   << "\ty = " << getY() << "\tz = " << getZ() << std::endl;
 }

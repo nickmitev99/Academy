@@ -15,10 +15,11 @@ class Cube : public Square
   Cube(Cube &&rRef) noexcept; 
   ~Cube();
 
-  inline int getZ() { return *z; }
-  inline int getCbCount() { return cbCounter; }
-};
+  inline int getZ() const { return *z; }
+  
+  static int getCbCount();
 
-void displayCube(Cube &c);
+  void displayCube();
+};
 
 #endif //CUBE_H

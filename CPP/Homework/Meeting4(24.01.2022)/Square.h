@@ -16,12 +16,12 @@ class Square : public Point
   Square(Square &&rRef) noexcept;
   ~Square();
 
-  inline int getX() { return *x; }
-  inline int getY() { return *y; }
-  inline int getSrCount() { return srCounter; }
-  const int displayThis();
-};
+  inline int getX() const { return *x; }
+  inline int getY() const { return *y; }
 
-void displaySquare(Square &s);
+  static int getSrCount();
+
+  void displaySquare();
+};
 
 #endif //SQUARE_H

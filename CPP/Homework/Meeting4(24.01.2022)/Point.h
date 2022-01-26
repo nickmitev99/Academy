@@ -13,12 +13,13 @@ class Point
   Point(Point &&rRef) noexcept;
   ~Point();
 
-  inline int getPt() { return *pt; }
-  inline int getPtCount() { return ptCounter; }
+  inline int getPt() const { return *pt; }
 
-  const int getThis();
+  static int getPtCount();
+
+  void displayPoint();
+
+  int getThis() const;
 };
-
-void displayPoint(Point &pt);
 
 #endif //POINT_H

@@ -3,6 +3,11 @@
 
 int Square::srCounter = 0;
 
+int Square::getSrCount() 
+{ 
+  return srCounter; 
+}
+
 Square::Square(int p, int xX, int yY) : Point(p)
 {
   srCounter++;
@@ -49,7 +54,7 @@ Square::Square(Square &&rRef) noexcept : x(rRef.x), y(rRef.y)
   std::cout << "Square move constructor" << std::endl;
 }
 
-void displaySquare(Square &s)
+void Square::displaySquare()
 {
-  std::cout << __func__  << ":\nCount = " << s.getSrCount() << "\tpt = " << s.getPt() << "\tx = " << s.getX() << "\ty = " << s.getY() << std::endl;
+  std::cout << __func__  << ":\nCount = " << getSrCount() << "\tpt = " << getPt() << "\tx = " << getX() << "\ty = " << getY() << std::endl;
 }
