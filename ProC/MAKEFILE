@@ -1,0 +1,25 @@
+ORACLE_SDK=C:/oracle/instantclient_21_3/sdk
+NAME=test
+PREPPROC=proc
+CCOMPILER=gcc
+ORACLE_INCLUDE=$(ORACLE_SDK)/include
+LIBRARY_NAME=-lorasql
+LIBRARY_PATH=-L $(ORACLE_SDK)/lib/msvc
+INCLUDEDIR =-I $(ORACLE_INCLUDE) -L $(ORACLE_INCLUDE)
+PCFILES=$(NAME).pc
+SOURCES=$(PCFILES:.pc=.c)
+OBJECTS=$(SOURCES:.c=.o)
+TARGET=$(NAME).exe
+
+all: $(TARGET)
+$(SOURCES): $(PCFILES)
+	$(PREPPROC) $<
+
+$(OBJECTS): $(SOURCES)
+	$(CCOMPILER) -c $< -o $@ $(INCLUDEDIR) $(LIBRARY_NAME)
+
+$(TARGET): $(OBJECTS)
+	$(CCOMPILER) -o $@ -s $< $(LIBRARY_PATH) $(LIBRARY_NAME)
+
+clean:
+	del -fr $(TARGET)

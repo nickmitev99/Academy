@@ -1,0 +1,141 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sqlca.h>
+#include <sqlcpr.h> 
+#include <conio.h>
+
+EXEC SQL BEGIN DECLARE SECTION;/* declare host variables */
+  char g_userid[64] = { 0 };
+  char g_szValue[64] = { 0 };
+  char g_szDate[64] = { 0 }; int g_iValue = 0;
+EXEC SQL END DECLARE SECTION;
+
+void sql_error(char *msg) {
+  char buf[BUFSIZ] = { 0 };
+  size_t buflen = 0; size_t msglen = 0;
+  EXEC SQL WHENEVER SQLERROR CONTINUE; 
+  EXEC SQL ROLLBACK WORK RELEASE; 
+  buflen = sizeof (buf);
+  sqlglm(buf, &buflen, &msglen);
+  printf("%s: ", msg);
+  buf[msglen] = 0;
+  printf("%s\n", buf); 
+  exit(1); 
+}
+
+/* create table T_TEST */
+void create_t_test() {
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  EXEC SQL CREATE TABLE T_TEST (F_ID int, F_NAME varchar2(16), F_DATE date);
+
+  printf("\nTable T_TEST created.\n");
+}
+
+/* drop table T_TEST */
+void drop_t_test() {
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  EXEC SQL DROP TABLE T_TEST;
+
+  printf("\nTable T_TEST dropped.\n");
+}
+
+
+/* commit transaction */
+void exec_commit() {
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  EXEC SQL COMMIT;
+}
+
+void insert_t_test(int iValue, const char* pszName) {
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  g_iValue = iValue;
+  strcpy(g_szValue, pszName);
+
+  EXEC SQL INSERT INTO T_TEST (F_ID, F_NAME, F_DATE) VALUES (:g_iValue, :g_szValue, SYSDATE);
+  printf("\nInserted record with ID: %d\n", iValue);
+}
+
+void delete_t_test(int iValue) {
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  g_iValue = iValue;
+
+  EXEC SQL DELETE T_TEST WHERE F_ID = :g_iValue;
+
+  printf("\nDeleted record with ID: %d\n", iValue);
+}
+
+void select_t_test() {
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+  /* declare a cursor */ 
+  EXEC SQL DECLARE my_cursor CURSOR FOR SELECT * FROM T_TEST; 
+  /* open the cursor and identify the active set */ 
+  EXEC SQL OPEN my_cursor; 
+
+  printf("\n SELECT * from T_TEST:\n");
+
+  EXEC SQL WHENEVER NOT FOUND DO break; 
+  for (;;) { 
+
+    EXEC SQL FETCH my_cursor INTO :g_iValue, :g_szValue, :g_szDate;
+    printf("Result: %d, %s, %s\n", g_iValue, g_szValue, g_szDate);
+
+  }
+
+  EXEC SQL CLOSE my_cursor; 
+}
+
+ int main() 
+ {
+  printf("Enter username, password and session name: ");
+  scanf("%s", g_userid);
+
+  /* handle errors */ 
+  EXEC SQL WHENEVER SQLERROR do sql_error("Oracle error");
+
+  /* connect to Oracle */ 
+  EXEC SQL CONNECT :g_userid; 
+  printf("Connected.\n"); 
+
+  getch();
+
+  create_t_test();
+  insert_t_test(1, "Name1");
+  insert_t_test(2, "Name2");
+  insert_t_test(3, "Name3");
+
+  getch();
+
+  exec_commit();
+
+  select_t_test();
+  delete_t_test(2);
+  select_t_test();  
+
+  getch();
+
+  drop_t_test();
+
+  getch();
+
+
+  EXEC SQL COMMIT WORK RELEASE; 
+
+  return 0;
+}

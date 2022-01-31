@@ -64,6 +64,26 @@ Fraction Fraction::operator*(const Fraction &fRef)
   return f;
 }
 
+Fraction operator*(const Fraction &fRef, int iNum)
+{
+  Fraction f1;
+
+  f1.divider = fRef.divider * iNum;
+  f1.denominator = fRef.denominator;
+
+  return f1;
+}
+
+Fraction operator*(int iNum, const Fraction &fRef)
+{
+  Fraction f1;
+
+  f1.divider = fRef.divider * iNum;
+  f1.denominator = fRef.denominator;
+
+  return f1;
+}
+
 //Task4
 std::ostream& operator<<(std::ostream &out, const Fraction& fRef)
 {

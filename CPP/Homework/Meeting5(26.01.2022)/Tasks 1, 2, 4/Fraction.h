@@ -14,6 +14,8 @@ public:
   ~Fraction();
 
   Fraction operator*(const Fraction &fRef);
+  friend Fraction operator*(const Fraction &fRef, int iNum);
+  friend Fraction operator*(int iNum, const Fraction &fRef);
 
   Fraction& operator=(const Fraction &fRef);
 

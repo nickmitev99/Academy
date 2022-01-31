@@ -27,6 +27,9 @@ int main(void)
   std::cout << "f3 = ";
   f3 = f1 * f2;
 
+  f3 = f3 * 5;
+  f3 = 10 * f3;
+
   f3.print();
 
   //Task4
