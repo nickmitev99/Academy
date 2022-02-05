@@ -1,5 +1,5 @@
 ORACLE_SDK=C:/oracle/instantclient_21_3/sdk
-NAME=test
+NAME=Tasks
 PREPPROC=proc
 CCOMPILER=gcc
 ORACLE_INCLUDE=$(ORACLE_SDK)/include

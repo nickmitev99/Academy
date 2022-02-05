@@ -1,0 +1,166 @@
+//C Libraries
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <ctype.h>
+#include <string.h>
+
+//SQL Libraries
+#include <sqlca.h>
+#include <sqlcpr.h>
+
+#define NON_EXISTENT -942 //A CODE FOR WHENEVER THE TABLE IS ALREADY DROPPED
+
+void loginSql();
+void sqlStatement();
+void handleErrors(char *strMsg);
+void confirmChanges();
+void dropTable();
+void readSQLFromFile(const char* filename);
+
+EXEC SQL BEGIN DECLARE SECTION;
+  char gstrUserSession[256] = "nikolay_mitev/dbpass@83.228.124.173:6223/nikolay_mitev";
+  char gstrDynSql[256] = { 0 };
+EXEC SQL END DECLARE SECTION;
+
+int main()
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("\nError in main");
+
+  loginSql();
+  // dropTable();
+  // confirmChanges();
+
+  readSQLFromFile("Commands.txt");
+
+  EXEC SQL COMMIT WORK RELEASE;
+
+  return 0;
+}
+
+//Task1
+void loginSql()
+{
+  // printf("Enter username, password and session name: ");
+  // scanf("%s", gstrUserSession);
+
+  fflush(stdin);
+
+  EXEC SQL CONNECT :gstrUserSession;
+
+  EXEC SQL WHENEVER SQLERROR do handleErrors("SQL Error while logging in");
+}
+
+//Task1
+void sqlStatement()
+{ 
+  printf("ENTER A SQL STATEMENT: ");
+  fgets(gstrDynSql, 256, stdin);
+
+  EXEC SQL EXECUTE IMMEDIATE :gstrDynSql;
+
+  EXEC SQL WHENEVER SQLERROR do handleErrors("SQL Error while executing a query");
+}
+
+//Test
+void dropTable()
+{
+  EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+  EXEC SQL DROP TABLE TEST;
+
+  if(sqlca.sqlcode == 0)
+  {
+    printf("\nTable dropped succesfully!");
+  }
+  else if(sqlca.sqlcode == NON_EXISTENT)
+  {
+    printf("\nThis table has already been dropped");
+  }
+  else
+  {
+    printf("\nAn unknown error occured");
+  }
+}
+
+//Task2
+void handleErrors(char *strMsg)
+{
+  char strBuff[256] = { 0 };
+  size_t szBuffLen, szMsgLen;
+
+  EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+  szBuffLen = (sizeof(strBuff));
+  sqlglm(strBuff, &szBuffLen, &szMsgLen);
+
+  printf("%s: ", strMsg);
+
+  strBuff[szMsgLen] = 0;
+  printf("%s", strBuff);
+
+  EXEC SQL ROLLBACK WORK RELEASE;
+
+  exit(1);
+}
+
+//Task3
+void confirmChanges()
+{
+  char cChoice = '\0';
+
+  while( (toupper(cChoice) != 'N') || (toupper(cChoice) != 'Y') )
+  {
+    printf("\nDo yo want to confirm the changes?(y/n)");
+    cChoice = getch();
+
+    if(toupper(cChoice) == 'Y')
+    {
+      EXEC SQL COMMIT;
+      return;
+    }
+    else if(toupper(cChoice) == 'N')
+    {
+      EXEC SQL ROLLBACK;
+      return;
+    }
+  }
+}
+
+//Homework: Task4
+void readSQLFromFile(const char* filename)
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("\nError in readSQLFromFile");
+
+  EXEC SQL BEGIN DECLARE SECTION;
+  char strCommand[256] = { 0 };
+  EXEC SQL END DECLARE SECTION;
+
+  FILE *fPtr = fopen(filename, "r+");
+
+  if(fPtr == NULL)
+  {
+    printf("File couldn't be opened");
+    exit(2);
+  }
+
+  while(!feof(fPtr))
+  {
+    fgets(strCommand, 256, fPtr);
+
+    int iStrLenght = strlen(strCommand);
+
+    strCommand[iStrLenght] = '\0';
+
+    printf("\n%s\n", strCommand);
+
+    EXEC SQL EXECUTE IMMEDIATE :strCommand; 
+
+    if( ( strncmp(strCommand, "CREATE", (strlen("CREATE") - 1)) ) && ( strncmp(strCommand, "DROP", (strlen("DROP") - 1) )) )
+    {
+      confirmChanges();
+    }
+  }
+
+  fclose(fPtr);
+}
