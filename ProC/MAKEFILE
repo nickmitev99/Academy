@@ -22,4 +22,5 @@ $(TARGET): $(OBJECTS)
 	$(CCOMPILER) -o $@ -s $< $(LIBRARY_PATH) $(LIBRARY_NAME)
 
 clean:
-	del -fr $(TARGET)
+	del /F /S $(TARGET) $(OBJECTS) $(SOURCES)
+# rm -fr $(TARGET) $(OBJECTS) $(SOURCES)

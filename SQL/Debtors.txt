@@ -1,0 +1,444 @@
+CREATE TABLE D_INDIV_TYPE
+(
+    TYPE NUMBER NOT NULL,
+    VALUE VARCHAR(30) NOT NULL,
+    PRIMARY KEY (TYPE)
+);
+
+CREATE TABLE D_CON_TYPE
+(
+    TYPE NUMBER NOT NULL,
+    VALUE VARCHAR(30) NOT NULL,
+    PRIMARY KEY (TYPE)
+);
+
+CREATE TABLE D_INV_TYPE
+(
+    TYPE NUMBER NOT NULL,
+    VALUE VARCHAR(30) NOT NULL,
+    PRIMARY KEY (TYPE)
+);
+
+CREATE TABLE D_PAY_TYPE
+(
+    TYPE NUMBER NOT NULL,
+    VALUE VARCHAR(30) NOT NULL,
+    PRIMARY KEY (TYPE)
+);
+
+CREATE TABLE D_INDIVIDUAL
+(
+    ID NUMBER NOT NULL,
+    FNAME VARCHAR(50) NOT NULL,
+    LNAME VARCHAR(50) NOT NULL,
+    TYPE NUMBER NOT NULL REFERENCES D_INDIV_TYPE(TYPE),
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE D_CONTACTS
+(
+    ID NUMBER NOT NULL,
+    INDIVIDUAL NUMBER NOT NULL REFERENCES D_INDIVIDUAL(ID),
+    TYPE NUMBER NOT NULL REFERENCES D_CON_TYPE(TYPE),
+    CONTACT VARCHAR(50) NOT NULL,
+    STATUS INT NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE D_INVOICES
+(
+    ID NUMBER NOT NULL,
+    INDIVIDUAL NUMBER NOT NULL REFERENCES D_INDIVIDUAL(ID),
+    AMOUNT NUMBER NOT NULL,
+    TYPE NUMBER NOT NULL REFERENCES D_INV_TYPE(TYPE),
+    CREATED DATE NOT NULL,
+    DUE DATE NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE D_PAYMENTS
+(
+    ID NUMBER NOT NULL,
+    INDIVIDUAL NUMBER NOT NULL REFERENCES D_INDIVIDUAL(ID),
+    AMOUNT NUMBER NOT NULL,
+    TYPE NUMBER NOT NULL REFERENCES D_PAY_TYPE(TYPE),
+    CREATED DATE NOT NULL,
+    RECEIVED DATE NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE D_MATCHES
+(
+    INVOICE NUMBER NOT NULL REFERENCES D_INVOICES(ID),
+    PAYMENT NUMBER NOT NULL REFERENCES D_PAYMENTS(ID),
+    AMOUNT NUMBER NOT NULL, --reffers to payments
+    "DATE" DATE NOT NULL,
+    PRIMARY KEY (INVOICE, PAYMENT)
+);
+
+ALTER TABLE D_MATCHES
+ADD ID NUMBER NOT NULL;
+
+CREATE TABLE D_MESSAGES
+(
+    VALUE NUMBER NOT NULL,
+    MESSAGE VARCHAR(200) NOT NULL,
+    PRIMARY KEY(VALUE)
+);
+
+INSERT ALL
+
+INTO D_MESSAGES (value, message)
+VALUES (-1, 'Your generosity will help others. Thank you kindly for your actions, I will hope to have great time during the holidays and you should expect my present.')
+INTO D_MESSAGES (value, message)
+VALUES (0, 'You were nice kid this year, Santa will bring you a present')
+INTO D_MESSAGES (value, message)
+VALUES (10, 'I see you try hard this year, I will bring you a present to show my good will')
+INTO D_MESSAGES (value, message)
+VALUES (50, 'You will take an accounting class this year in order to have better finance understanding')
+INTO D_MESSAGES (value, message)
+VALUES (51, 'You need some serious help and my powers are not enough. The change should be starting from you. I will give you time to reconsider your actions.')
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_INDIV_TYPE (type, value)
+VALUES (1, 'Individual')
+INTO D_INDIV_TYPE (type, value)
+VALUES (2, 'Legal')
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_CON_TYPE
+VALUES(1, 'Phone')
+INTO D_CON_TYPE
+VALUES(2, 'E-mail')
+INTO D_CON_TYPE
+VALUES(3, 'Address')
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_INV_TYPE
+VALUES(1, 'Principal')
+INTO D_INV_TYPE
+VALUES(2, 'Interest')
+INTO D_INV_TYPE
+VALUES(3, 'Taxes')
+INTO D_INV_TYPE
+VALUES(4, 'Penalty')
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_PAY_TYPE
+VALUES(1, 'FROM')
+INTO D_PAY_TYPE
+VALUES(2, 'TO')
+
+SELECT * FROM DUAL;
+
+--CREATE OR REPLACE PROCEDURE INSERT_INDIVIDUAL
+--(
+--    F_NAME VARCHAR(50) NOT NULL,
+--    L_NAME VARCHAR(50) NOT NULL,
+--    T_TYPE NUMBER NOT NULL
+--)
+--AS
+--BEGIN
+--    INSERT INTO D_INDIVIDUAL
+--    SELECT NULL, FNAME, LNAME, TYPE
+--    FROM 
+
+INSERT ALL
+
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Nikolay', 'Mitev', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Ivan', 'Ivanov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Valentin', 'Binev', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Hristo', 'Deanov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Georgi', 'Stoqnov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Petar', 'Filipov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Stilian', 'Iordanov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Boqn', 'Popov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Georgi', 'Ivanov', 1)
+INTO D_INDIVIDUAL
+VALUES(NULL, 'Dimitar', 'Penev', 1)
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_CONTACTS
+VALUES(NULL, 10001, 1, '0899224433', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10001, 2, 'nick.mitev.99@gmail.com', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10001, 3, 'Burgas, kv. Akaciite, 200', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10002, 1, '0833224453', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10002, 2, 'neshto@abv.bg', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10003, 1, '0879565531', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10004, 2, 'htc@hotmail.co.uk', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10005, 1, '0877235343', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10005, 3, 'Sofia, zh. k. Mladost 3, 200', 0)
+INTO D_CONTACTS
+VALUES(NULL, 10007, 2, 'io@tu-sofia.bg', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10009, 1, '0883728601', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10009, 3, 'Plovdiv, zh. k. Izgrev', 1)
+INTO D_CONTACTS
+VALUES(NULL, 10010, 1, '0845454004', 0)
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_INVOICES
+VALUES(NULL, 10001, 120, 3, '02-09-2021', '02-12-2021')
+INTO D_INVOICES
+VALUES(NULL, 10001, 12, 2, '02-12-2021', '02-01-2022')
+INTO D_INVOICES
+VALUES(NULL, 10001, 500, 4, '07-05-2021', '07-05-2031')
+INTO D_INVOICES
+VALUES(NULL, 10002, 50, 4, '04-01-2022', '04-02-2022')
+INTO D_INVOICES
+VALUES(NULL, 10002, 200, 1, '20-12-2021', '20-03-2022')
+INTO D_INVOICES
+VALUES(NULL, 10003, 100, 3, '04-01-2022', '04-04-2022')
+INTO D_INVOICES
+VALUES(NULL, 10004, 200, 3, '02-03-2020', '02-06-2020')
+INTO D_INVOICES
+VALUES(NULL, 10005, 300, 1, '15-01-2022', '30-01-2022')
+INTO D_INVOICES
+VALUES(NULL, 10005, 30, 2, '30-01-2022', '15-02-2022')
+INTO D_INVOICES
+VALUES(NULL, 10006, 220, 4, '04-03-2020', '04-03-2030')
+INTO D_INVOICES
+VALUES(NULL, 10007, 80, 1, '03-07-2019', '03-08-2019')
+INTO D_INVOICES
+VALUES(NULL, 10008, 100, 1, '24-06-2021', '24-12-2021')
+INTO D_INVOICES
+VALUES(NULL, 10009, 320, 3, '15-01-2022', '15-02-2022')
+INTO D_INVOICES
+VALUES(NULL, 10010, 250, 3, '15-12-2021', '15-01-2022')
+
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_PAYMENTS
+VALUES(NULL, 10001, 120, 1, '04-01-2022', '05-01-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10001, 12, 1, '04-01-2022', '05-01-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10002, 50, 1, '06-01-2022', '09-01-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10002, 200, 1, '17-01-2022', '20-01-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10004, 200, 1, '01-06-2020', '02-06-2020')
+INTO D_PAYMENTS
+VALUES(NULL, 10005, 300, 1, '31-01-2022', '01-01-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10005, 30, 1, '31-01-2022', '01-02-2022')
+INTO D_PAYMENTS
+VALUES(NULL, 10006, 220, 1, '04-03-2020', '04-03-2030')
+INTO D_PAYMENTS
+VALUES(NULL, 10007, 80, 1, '04-07-2019', '04-07-2019')
+INTO D_PAYMENTS
+VALUES(NULL, 10008, 100, 1, '01-09-2021', '03-09-2021')
+INTO D_PAYMENTS
+VALUES(NULL, 10010, 250, 1, '20-12-2021', '21-01-2021')
+
+
+SELECT * FROM DUAL;
+
+INSERT ALL
+
+INTO D_MATCHES
+VALUES(30001, 40001, 120, '05-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30002, 40002, 12, '05-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30004, 40003, 50, '09-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30005, 40004, 200,'20-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30007, 40005, 200, '02-06-2020', NULL)
+INTO D_MATCHES
+VALUES(30008, 40006, 300, '01-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30009, 40007, 30, '01-01-2022', NULL)
+INTO D_MATCHES
+VALUES(30010, 40008, 220, '04-03-2030', NULL)
+INTO D_MATCHES
+VALUES(30011, 40009, 80, '04-07-2019', NULL)
+INTO D_MATCHES
+VALUES(30012, 40010, 100, '03-09-2021', NULL)
+INTO D_MATCHES
+VALUES(30014, 40011, 250, '21-01-2021', NULL)
+
+SELECT * FROM DUAL;
+
+
+SELECT 
+        indv.fname,
+        'No contact available' AS STATUS
+    FROM 
+        D_INDIVIDUAL indv
+    LEFT JOIN
+        D_CONTACTS c
+    ON
+        c.individual = indv.id
+    WHERE 
+        c.individual IS NULL
+UNION
+SELECT
+        indv.fname,
+        'No active contact' AS STATUS
+    FROM
+        D_INDIVIDUAL indv,
+        D_CONTACTS c
+    WHERE 
+        indv.id = c.individual
+    GROUP BY 
+        indv.fname
+    HAVING 
+        MAX(c.status) = 0;
+        
+       
+--ГЛУПОСТИ 
+--SELECT indiv.fname, indiv.lname, (SELECT SUM(paym.amount)-SUM(inv.amount) AS PAYED
+--FROM D_PAYMENTS paym, D_INVOICES inv
+--WHERE paym.individual = inv.individual)
+--FROM D_INDIVIDUAL indiv, D_PAYMENTS paym
+--WHERE indiv.id = paym.individual
+--GROUP BY indiv.fname, indiv.lname;
+--
+--
+--SELECT i.fname, SUM(p.amount)
+--FROM D_INDIVIDUAL i
+--LEFT JOIN D_PAYMENTS p
+--ON i.ID = p.individual
+--GROUP BY i.fname;
+--
+--SELECT i.fname, SUM(inv.amount)
+--FROM D_INDIVIDUAL i
+--LEFT JOIN D_INVOICES inv
+--ON i.ID = inv.individual
+--GROUP BY i.fname;
+--
+--CREATE OR REPLACE VIEW D_PAYED_OWED
+--AS
+--SELECT i.fname, i.lname, SUM(inv.amount) as OWED, SUM(m.amount) as PAYED
+--FROM D_INDIVIDUAL i
+--LEFT JOIN D_INVOICES inv
+--ON i.ID = inv.individual
+--LEFT JOIN D_MATCHES m
+--ON inv.id = m.invoice
+--GROUP BY i.fname, i.lname;
+--
+--
+--SELECT i.fname, i.lname, (payed - owed) AS amount FROM D_PAYED_OWED po, d_INDIVIDUAL i
+--WHERE i.fname = po.fname AND i.lname = po.lname;
+
+
+INSERT INTO D_INVOICES
+VALUES(NULL, 10010, 200, 1, '20-12-2021', '21-01-2021');
+
+INSERT INTO D_INVOICES
+VALUES(NULL, 10004, 10, 3, '22-12-2021', '22-01-2021');
+
+INSERT INTO D_PAYMENTS
+VALUES(NULL, 10003, 200, 1, '10-12-2021', '10-01-2021');
+
+INSERT INTO D_MATCHES
+VALUES(30006, 40023, 100, '10-01-2021', NULL);
+
+CREATE OR REPLACE VIEW BALANCE_VIEW 
+AS
+SELECT i.id, i.fname, SUM(inv.amount) AS OWED, SUM(m.amount) AS PAYED
+FROM D_Individual i
+    LEFT JOIN D_Invoices inv
+    ON i.id = inv.individual
+    LEFT JOIN D_matches m
+    ON inv.id = m.invoice
+WHERE inv.due < SYSDATE
+GROUP BY i.id, i.fname;
+ 
+CREATE OR REPLACE VIEW CASES
+AS
+SELECT (bv.owed - bv.payed) AS OWED,
+    (CASE
+    WHEN (bv.owed - bv.payed) BETWEEN 1 AND 9 THEN 1
+    WHEN (bv.owed - bv.payed) BETWEEN 10 AND 49 THEN 10
+    WHEN (bv.owed- bv.payed) = 50 THEN 50
+    WHEN (bv.owed - bv.payed) >= 51 THEN 51
+    END) RESULT
+FROM BALANCE_VIEW bv;
+
+SELECT i.fname, i.lname, bv.owed - bv.payed AS OWED, m.message
+FROM BALANCE_VIEW bv
+LEFT JOIN D_INDIVIDUAL i
+ON bv.id = i.id
+LEFT JOIN CASES c
+ON (bv.owed - bv.payed) = c.owed
+LEFT JOIN D_MESSAGES m
+ON c.result = m.value
+WHERE (bv.owed - bv.payed) > 0;
+
+CREATE OR REPLACE VIEW OVERPAYED_VIEW AS
+SELECT i.id, i.fname, SUM(inv.amount) as OWED, sum(m.amount)as PAYED, sum(p.amount) as TOTAL_PAID
+FROM D_Individual i
+    LEFT JOIN D_Invoices inv
+    ON i.id = inv.individual
+    LEFT JOIN D_Matches m
+    ON inv.id = m.invoice
+    LEFT JOIN D_Payments p
+    ON m.payment = p.id
+GROUP BY i.id, i.fname;
+
+SELECT i.fname, i.lname, (ov.Total_paid - ov.payed) AS TIP, m.message AS MESSAGE
+FROM OVERPAYED_VIEW ov
+LEFT JOIN D_Individual i
+ON ov.id = i.id
+LEFT JOIN D_MESSAGES m
+ON (ov.payed - ov.Total_paid) <= -1 AND m.value < 0
+WHERE (ov.Total_paid - ov.Payed) > 0;
+
+
+
+--Съдържание на свързващите таблици
+SELECT * FROM D_INDIVIDUAL ind
+LEFT JOIN D_INDIV_TYPE t
+ON ind.type = t.type;
+
+SELECT inv.ID, i.fname, i.lname, inv.amount, inv.created, inv.due FROM D_INVOICES inv
+LEFT JOIN D_INDIVIDUAL i
+ON inv.individual = i.id;
+
+SELECT p.ID, i.fname, i.lname, p.amount, p.created, p.received FROM D_PAYMENTS p
+LEFT JOIN D_INDIVIDUAL i
+ON p.individual = i.id;
+
+SELECT * FROM D_MATCHES;

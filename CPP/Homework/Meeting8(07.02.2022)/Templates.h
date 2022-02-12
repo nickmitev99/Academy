@@ -16,9 +16,9 @@ public:
 
   friend std::ostream& operator<<(std::ostream &out, const My_Pair<T1, T2> &ref)
   {
-  out << ref.first << " and " << ref.second << std::endl;
+    out << ref.first << " and " << ref.second << std::endl;
 
-  return out;
+    return out;
   }
 };
 

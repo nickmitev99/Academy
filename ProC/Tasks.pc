@@ -17,21 +17,31 @@ void handleErrors(char *strMsg);
 void confirmChanges();
 void dropTable();
 void readSQLFromFile(const char* filename);
+void loginConfirm();
+void countRecords();
+void displayRecords();
+void insertQuery(int i, double d, char *p);
+void executeQueries();
+void insertWithNull();
 
 EXEC SQL BEGIN DECLARE SECTION;
-  char gstrUserSession[256] = "nikolay_mitev/dbpass@83.228.124.173:6223/nikolay_mitev";
+  char gstrUserSession[256] = { 0 };
   char gstrDynSql[256] = { 0 };
+  int iIndicator = -1;
 EXEC SQL END DECLARE SECTION;
 
 int main()
 {
   EXEC SQL WHENEVER SQLERROR do handleErrors("\nError in main");
-
+  
   loginSql();
+  //EXEC SQL DROP TABLE TEST;
   // dropTable();
   // confirmChanges();
 
-  readSQLFromFile("Commands.txt");
+  // readSQLFromFile("Commands.txt");
+
+  executeQueries();
 
   EXEC SQL COMMIT WORK RELEASE;
 
@@ -41,8 +51,9 @@ int main()
 //Task1
 void loginSql()
 {
-  // printf("Enter username, password and session name: ");
-  // scanf("%s", gstrUserSession);
+  strcpy(gstrUserSession, "nikolay_mitev/dbpass@83.228.124.173:6223/nikolay_mitev");
+
+  printf("LOGGED IN SUCCESFULLY\n");
 
   fflush(stdin);
 
@@ -54,8 +65,7 @@ void loginSql()
 //Task1
 void sqlStatement()
 { 
-  printf("ENTER A SQL STATEMENT: ");
-  fgets(gstrDynSql, 256, stdin);
+  //gstrDynSql = "nikolay_mitev/dbpass@83.228.124.173:6223/nikolay_mitev";
 
   EXEC SQL EXECUTE IMMEDIATE :gstrDynSql;
 
@@ -90,6 +100,7 @@ void handleErrors(char *strMsg)
   size_t szBuffLen, szMsgLen;
 
   EXEC SQL WHENEVER SQLERROR CONTINUE;
+  EXEC SQL ROLLBACK WORK RELEASE;
 
   szBuffLen = (sizeof(strBuff));
   sqlglm(strBuff, &szBuffLen, &szMsgLen);
@@ -98,8 +109,6 @@ void handleErrors(char *strMsg)
 
   strBuff[szMsgLen] = 0;
   printf("%s", strBuff);
-
-  EXEC SQL ROLLBACK WORK RELEASE;
 
   exit(1);
 }
@@ -164,3 +173,151 @@ void readSQLFromFile(const char* filename)
 
   fclose(fPtr);
 }
+
+// Task 5
+void loginConfirm()
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("Error in loginConfirm");
+
+  printf("Enter a login authentication for the database: ");
+  fgets(gstrUserSession, 256, stdin);
+
+  EXEC SQL CONNECT :gstrUserSession;
+
+  printf("LOGGED IN SUCCESFULLY!\n");
+
+  fflush(stdin);
+
+  printf("Enter a SQL command (without a semicolon): ");
+  fgets(gstrDynSql, 256, stdin);
+
+  EXEC SQL EXECUTE IMMEDIATE :gstrDynSql;
+
+  printf("SQL query succesfully executed!\n");
+}
+
+// Task 6
+void countRecords()
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("Error in countRecords");
+
+  EXEC SQL BEGIN DECLARE SECTION;
+  int iCountOfRows = 0;
+  EXEC SQL END DECLARE SECTION;
+
+  EXEC SQL DECLARE my_cursor CURSOR FOR SELECT COUNT(*) FROM TEST;
+
+  EXEC SQL OPEN my_cursor;
+
+  EXEC SQL FETCH my_cursor INTO :iCountOfRows;
+  printf("\nCount of rows: %d\n", iCountOfRows);
+
+  EXEC SQL CLOSE my_cursor;
+}
+
+// Task 7
+void displayRecords()
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("Error in displayRecords");
+
+  EXEC SQL BEGIN DECLARE SECTION;
+  int iID;
+  double dNumber = 0;
+  char strValue[30] = { 0 };
+  EXEC SQL END DECLARE SECTION;
+
+  EXEC SQL DECLARE my_cursor2 CURSOR FOR SELECT * FROM TEST WHERE NUMB != NULL;
+
+  EXEC SQL OPEN my_cursor2;
+
+  EXEC SQL WHENEVER NOT FOUND DO break;
+  for (;;) 
+  {
+    EXEC SQL FETCH my_cursor2 INTO :iID, :dNumber, :strValue;
+    printf("\nResult: %d, %lf, %s\n", iID, dNumber, strValue);
+  }
+  EXEC SQL WHENEVER NOT FOUND continue;
+
+  EXEC SQL CLOSE my_cursor2;
+}
+
+void insertQuery(int i, double d, char *p)
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("Error in insertQuery");
+
+  EXEC SQL BEGIN DECLARE SECTION;
+  int iID = 0;
+  double dNumber = 0.0;
+  char strValue[30] = { 0 };
+  EXEC SQL END DECLARE SECTION;
+
+  iID = i;
+  dNumber = d;
+  strcpy(strValue, p);
+
+  EXEC SQL INSERT INTO TEST (ID, NUMB, VALUE) VALUES (:iID, :dNumber, :strValue);
+
+  printf("\nInserted a row with the following: %d, %lf, %s", iID, dNumber, strValue);
+}
+
+void executeQueries()
+{
+  EXEC SQL WHENEVER SQLERROR do handleErrors("Error in executeQueries");
+
+  EXEC SQL BEGIN DECLARE SECTION;
+  int iID = 0;
+  double dNumber = 0.0;
+  char strValue[30] = { 0 };
+  EXEC SQL END DECLARE SECTION;
+
+  EXEC SQL CREATE TABLE TEST (ID int not null, NUMB number, VALUE varchar2(30) not null);
+
+  printf("\nTABLE TEST CREATED SUCCESFULLY");
+
+  insertWithNull();
+  insertQuery(1, 12.4, "Steven");
+  insertQuery(2, 13.6, "Dancho");
+  insertQuery(3, 12.5, "Omikron");
+
+  confirmChanges();
+
+  displayRecords();
+  countRecords();
+
+  EXEC SQL DELETE TEST WHERE ID = 3;
+
+  displayRecords();
+  countRecords();
+
+  confirmChanges();
+
+  EXEC SQL UPDATE TEST SET ID = 22 WHERE ID = 2;
+
+  displayRecords();
+  countRecords();
+
+  confirmChanges();
+
+  EXEC SQL DROP TABLE TEST;
+
+  printf("\nTABLE DROPPED SUCCESFULLY");
+}
+
+void insertWithNull()
+{
+  EXEC SQL BEGIN DECLARE SECTION;
+  int nId = 32;
+  double nValue = 2.4;
+  char strVal[30] = "SOMETHING";
+  short sValueInd = -1;
+  EXEC SQL END DECLARE SECTION;
+
+  EXEC SQL INSERT INTO TEST (ID, NUMB, VALUE)
+  VALUES ( :nId, :nValue:sValueInd, :strVal);
+
+  EXEC SQL SELECT ID INTO :nId
+  FROM TEST WHERE :nValue INDICATOR :sValueInd IS NULL;
+
+  printf("\n%d %d %s", nId, sValueInd, strVal);
+}
+// nikolay_mitev/dbpass@83.228.124.173:6223/nikolay_mitev

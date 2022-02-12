@@ -1,0 +1,32 @@
+Let's move the Christmas example to the database and do some more fun with it.
+INVOICES   - unique reference, debtor reference, amount, type, due date, creation date
+PAYMENTS - unique reference, payer reference, amount, type, received date, creation date
+MATCHING - unique reference, invoice reference, payment reference, amount, matching date
+INDIVIDUAL - unique reference, name, type (physical or not)
+CONTACTS - unique reference, individual reference, type (GSM, EMAIL, ... ), contact, status (active or not)
+Each invoice has only one individual
+One payment could have only one individual
+One invoice could be matched to many payments
+One payment could be matched to many invoices
+Only one record could exists for the couple invoice-payment in the matching table.
+One individual could be free of this to be debtor or payer
+Individual could have many contact details
+SQL statements:
+1. Create the structure and relations between the tables
+2. List of all debtors which have open (not fully paid) invoices which are overdue
+3. List all payers which have overpaid their debts
+4. List of all debtors who doesn't have any active contact details
+5. As before, prepare a suitable message for all individuals according to their balance
+Overpaid - "Your generosity will help others. Thank you kindly for your actions, I'll hope to have great time during the holidays and you should expect my present."
+Balance 0 - "You were nice kid this year, Santa will bring you a present"
+Balance 1 - 10  - "I see you try hard this year, I'll bring you a present to show my good will"
+Balance 11 - 50 - "You'll take an accounting class this year in order to have better finance understanding"
+Over 51        - "You need some serious help and my powers are not enough. The change should be starting from you. I'll give you time to reconsider your actions."
+Enjoy!
+
+
+Type of invoice - principal, interest, taxes, penalty (лихва, такса и т.н.)
+Type of payment - начин на плащане(ot nas kym debtora ili debtora kym nas)
+MATCHING - 
+
+PRIMARY KEY IN MATCHING SHOULD BE INVOICE ID AND PAYMENT ID

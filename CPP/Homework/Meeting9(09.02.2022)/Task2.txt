@@ -1,0 +1,6 @@
+Hello
+array
+person
+pirate
+pillar
+gender

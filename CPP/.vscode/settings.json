@@ -45,6 +45,11 @@
     "xutility": "cpp",
     "fstream": "cpp",
     "algorithm": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "iomanip": "cpp",
+    "bitset": "cpp",
+    "numeric": "cpp",
+    "xlocmon": "cpp",
+    "xloctime": "cpp"
   }
 }
